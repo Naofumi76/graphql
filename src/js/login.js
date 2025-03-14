@@ -1,3 +1,5 @@
+import * as profile from './profile.js'
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     form.addEventListener('submit', async (event) => {
@@ -7,8 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const token = await login(username, password)
             const userInfo = await fetchUserInfo(token)
-            loadProfilePage(userInfo)
+            profile.loadProfilePage(userInfo)
         } catch (error) {
+            displayErrorMessage('Invalid credentials. Please try again.')
             console.error('Login failed:', error)
         }
     });
@@ -63,10 +66,9 @@ async function fetchUserInfo(token) {
     return data.data.user[0]
 }
 
-function loadProfilePage(userInfo) {
-    document.body.innerHTML = `
-        <div class="auth-container">
-            <p>Hello, ${userInfo.login}</p>
-        </div>
-    `;
+function displayErrorMessage(message) {
+    const errorContainer = document.createElement('div')
+    errorContainer.className = 'error-message'
+    errorContainer.textContent = message;
+    document.querySelector('.auth-container').appendChild(errorContainer)
 }
