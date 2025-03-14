@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const token = await login(username, password)
             const userInfo = await fetchUserInfo(token)
-            profile.loadProfilePage(userInfo)
+            await profile.loadProfilePage(token, userInfo)
         } catch (error) {
             displayErrorMessage('Invalid credentials. Please try again.')
             console.error('Login failed:', error)
@@ -48,6 +48,8 @@ async function fetchUserInfo(token) {
                         id
                         login
                         attrs
+                        totalUp
+                        totalDown
                     }
                 }
             `
