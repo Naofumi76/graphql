@@ -34,7 +34,7 @@ async function login(username, password) {
     return data
 }
 
-async function fetchUserInfo(token) {
+export async function fetchUserInfo(token) {
     const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
         method: 'POST',
         headers: {

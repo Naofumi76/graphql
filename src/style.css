@@ -6,8 +6,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
+    padding: 20px 0;
+    overflow-x: hidden;
 }
 
 /* Login Page Styles */
@@ -84,4 +86,107 @@ body {
     padding: 10px;
     background-color: #2c2c2c;
     border-radius: 4px;
+}
+
+/* Audit Page Styles */
+.audit-list {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.audit-item {
+    margin-bottom: 15px;
+}
+
+.audit-page {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+}
+
+.audit-header-section {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.audit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 15px;
+    margin: 20px 0;
+}
+
+.audit-card {
+    background-color: #2c2c2c;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.audit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.audit-content {
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Responsive grid */
+@media (max-width: 992px) {
+    .audit-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .audit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #007BFF;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    margin-top: 10px;
+}
+
+.btn-link:hover {
+    color: #0056b3;
+}
+
+.btn-primary {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Grade styling */
+.grade-success {
+    color: #4CAF50; /* Green color for success */
+    font-weight: bold;
+}
+
+.grade-fail {
+    color: #F44336; /* Red color for failure */
+    font-weight: bold;
 }
