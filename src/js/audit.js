@@ -19,7 +19,8 @@ function displayAudits(audits, username, token) {
 	);
 
 	document.body.innerHTML = `
-        <div class="profile-container audit-page">
+		<div class="profile-container audit-page">
+			<button id="back-to-profile" class="btn-primary">Back to Profile</button>
             <div class="audit-header-section">
                 <h2>All Audits for ${username}</h2>
                 <h3>Number of audits: ${filteredAudits.length}</h3>
@@ -41,7 +42,6 @@ function displayAudits(audits, username, token) {
                     `;
 				}).join('')}
             </div>
-            <button id="back-to-profile" class="btn-primary">Back to Profile</button>
         </div>
     `;
 
