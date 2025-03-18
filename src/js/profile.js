@@ -1,5 +1,6 @@
 import * as utils from './utils.js'
 import * as audit from './audit.js'
+import * as login from './login.js'
 
 export async function loadProfilePage(token, userInfo, selectedModuleId = null) {
 	const audits = await fetchUserAudit(token, userInfo.login, true)
@@ -100,9 +101,22 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
                     <p><strong>Country:</strong> ${userInfo.attrs['country']}</p>
 					<p><strong>Email Validated:</strong> ${userInfo.attrs['mailcheckAccepted'] ? 'Yes' : 'No'}</p>
                 </div>
+                <button id="logout-button" class="btn-danger">Logout</button>
             </div>
         </div>
         <div class="overlay" id="overlay"></div>
+        
+        <!-- Confirmation dialog -->
+        <div class="confirmation-dialog" id="logout-dialog">
+            <div class="confirmation-content">
+                <h4>Confirm Logout</h4>
+                <p>Are you sure you want to logout?</p>
+                <div class="confirmation-buttons">
+                    <button id="confirm-logout" class="btn-danger">Yes, Logout</button>
+                    <button id="cancel-logout" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
     `;
 
 	// Add event listener for "See more" audits button
@@ -123,6 +137,10 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 	const userPanel = document.getElementById('user-panel');
 	const closePanel = document.getElementById('close-panel');
 	const overlay = document.getElementById('overlay');
+	const logoutDialog = document.getElementById('logout-dialog');
+	const logoutButton = document.getElementById('logout-button');
+	const confirmLogout = document.getElementById('confirm-logout');
+	const cancelLogout = document.getElementById('cancel-logout');
 
 	userIcon.addEventListener('click', () => {
 		userPanel.classList.add('show');
@@ -132,9 +150,24 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 
 	closePanel.addEventListener('click', closeUserPanel);
 	overlay.addEventListener('click', closeUserPanel);
-
+	
+	// Add logout functionality
+	logoutButton.addEventListener('click', () => {
+		logoutDialog.classList.add('show');
+		overlay.classList.add('active');
+	});
+	
+	confirmLogout.addEventListener('click', () => {
+		login.logout();
+	});
+	
+	// Use the closeUserPanel function for cancel button as well
+	cancelLogout.addEventListener('click', closeUserPanel);
+	
+	// Centralized function to close all panels
 	function closeUserPanel() {
 		userPanel.classList.remove('show');
+		logoutDialog.classList.remove('show');
 		overlay.classList.remove('active');
 		document.body.classList.remove('no-scroll');
 	}

@@ -1,6 +1,26 @@
 import * as profile from './profile.js'
 
-document.addEventListener('DOMContentLoaded', () => {
+// Check for existing session when page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        // Try to auto-login with stored token
+        const token = getCookie('auth_token');
+        if (token) {
+            const userInfo = await fetchUserInfo(token);
+            await profile.loadProfilePage(token, userInfo);
+            return; // Skip login form if session exists
+        }
+    } catch (error) {
+        console.error('Auto-login failed:', error);
+        // Clear invalid cookie if auto-login fails
+        deleteCookie('auth_token');
+    }
+
+    // Only set up the login form if no valid session exists
+    setupLoginForm();
+});
+
+function setupLoginForm() {
     const form = document.querySelector('form');
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -8,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = form.querySelector('input[type="password"]').value
         try {
             const token = await login(username, password)
+            // Set cookie with token upon successful login
+            setCookie('auth_token', token, 7); // Store for 7 days (adjust as needed)
             const userInfo = await fetchUserInfo(token)
             await profile.loadProfilePage(token, userInfo)
         } catch (error) {
@@ -15,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Login failed:', error)
         }
     });
-});
+}
 
 async function login(username, password) {
     const credentials = btoa(`${username}:${password}`)
@@ -73,4 +95,31 @@ function displayErrorMessage(message) {
     errorContainer.className = 'error-message'
     errorContainer.textContent = message;
     document.querySelector('.auth-container').appendChild(errorContainer)
+}
+
+// Cookie management functions
+export function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Strict`;
+}
+
+export function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.trim().split('=');
+        if (cookieName === name) {
+            return cookieValue;
+        }
+    }
+    return null;
+}
+
+export function deleteCookie(name) {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Strict`;
+}
+
+export function logout() {
+    deleteCookie('auth_token');
+    window.location.reload();
 }

@@ -51,7 +51,10 @@ function displayAudits(audits, username, token) {
 			const userInfo = await login.fetchUserInfo(token);
 			await profile.loadProfilePage(token, userInfo);
 		} catch (error) {
+			// If token is invalid, redirect to login
 			console.error('Failed to go back to profile:', error);
+			login.deleteCookie('auth_token');
+			window.location.reload();
 		}
 	});
 }
