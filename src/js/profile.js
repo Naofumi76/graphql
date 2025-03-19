@@ -1,6 +1,7 @@
 import * as utils from './utils.js'
 import * as audit from './audit.js'
 import * as login from './login.js'
+import * as graph from './graph.js'
 
 export async function loadProfilePage(token, userInfo, selectedModuleId = null) {
 	const audits = await fetchUserAudit(token, userInfo.login, true)
@@ -11,6 +12,10 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 		const piscineGoModule = modules.find(mod => mod.event.object.name === 'Piscine-Go');
 		selectedModuleId = piscineGoModule ? piscineGoModule.event.id : (modules[0]?.event.id || 0);
 	}
+	
+	// Find the selected module to determine its type
+	const selectedModule = modules.find(mod => mod.event.id === selectedModuleId);
+	const moduleType = selectedModule?.event.object.type || 'module';
 
 	const xp = await fetchUserXP(token, selectedModuleId)
 
@@ -118,6 +123,10 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
             </div>
         </div>
     `;
+	// Pass the module type to userXPPerProject
+	var xpProject = await graph.userXPPerProject(token, selectedModuleId, moduleType)
+	console.log("XP PROJECT:", xpProject)
+	console.log("MODULE TYPE:", moduleType)
 
 	// Add event listener for "See more" audits button
 	document.getElementById('see-more-audits').addEventListener('click', () => {
@@ -150,20 +159,20 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 
 	closePanel.addEventListener('click', closeUserPanel);
 	overlay.addEventListener('click', closeUserPanel);
-	
+
 	// Add logout functionality
 	logoutButton.addEventListener('click', () => {
 		logoutDialog.classList.add('show');
 		overlay.classList.add('active');
 	});
-	
+
 	confirmLogout.addEventListener('click', () => {
 		login.logout();
 	});
-	
+
 	// Use the closeUserPanel function for cancel button as well
 	cancelLogout.addEventListener('click', closeUserPanel);
-	
+
 	// Centralized function to close all panels
 	function closeUserPanel() {
 		userPanel.classList.remove('show');
