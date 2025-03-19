@@ -2,6 +2,7 @@ import * as utils from './utils.js'
 import * as audit from './audit.js'
 import * as login from './login.js'
 import * as graph from './graph.js'
+import * as chart from './chart.js'
 
 export async function loadProfilePage(token, userInfo, selectedModuleId = null) {
 	const audits = await fetchUserAudit(token, userInfo.login, true)
@@ -12,7 +13,7 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 		const piscineGoModule = modules.find(mod => mod.event.object.name === 'Piscine-Go');
 		selectedModuleId = piscineGoModule ? piscineGoModule.event.id : (modules[0]?.event.id || 0);
 	}
-	
+
 	// Find the selected module to determine its type
 	const selectedModule = modules.find(mod => mod.event.id === selectedModuleId);
 	const moduleType = selectedModule?.event.object.type || 'module';
@@ -49,7 +50,7 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
                 <h3>XP for ${modules.find(m => m.event.id == selectedModuleId)?.event.object.name || 'Selected Module'}</h3>
                 <p class="xp-amount">${xp.amount !== null ? utils.formatSize(xp.amount) : '0 XP'}</p>
             </div>
-            
+                        
             <div class="profile-sections-grid">
                 <div class="profile-section audit-ratio">
                     <h3>${userInfo.login}'s audit ratio</h3>
@@ -83,7 +84,12 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
                     </div>
                 </div>
             </div>
+
+			<div class="chart-container" id="xp-chart-container">
+				<div class="loading-chart">Loading XP chart...</div>
+			</div>
         </div>
+
         
         <!-- User info sliding panel -->
         <div class="user-panel" id="user-panel">
@@ -127,6 +133,9 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 	var xpProject = await graph.userXPPerProject(token, selectedModuleId, moduleType)
 	console.log("XP PROJECT:", xpProject)
 	console.log("MODULE TYPE:", moduleType)
+
+	// Create the XP chart with the project data
+	chart.createXPChart(xpProject, 'xp-chart-container');
 
 	// Add event listener for "See more" audits button
 	document.getElementById('see-more-audits').addEventListener('click', () => {
