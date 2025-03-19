@@ -1,3 +1,5 @@
+import * as utils from './utils.js';
+
 export function createXPChart(projectData, containerId) {
 	// Early return if no data or empty array
 	if (!projectData || projectData.length === 0) {
@@ -127,7 +129,7 @@ export function createXPChart(projectData, containerId) {
 
 			// Update info panel content
 			projectNameEl.textContent = projectName;
-			projectXpEl.textContent = `${xpAmount} XP`;
+			projectXpEl.textContent = `[XP] ${utils.formatSize(xpAmount)}`;
 			projectDateEl.textContent = date;
 
 			// Show the info panel
