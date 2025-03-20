@@ -1,5 +1,8 @@
 import * as profile from './profile.js'
 
+// Track failed login attempts
+let failedLoginAttempts = 0;
+
 // Check for existing session when page loads
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -28,12 +31,15 @@ function setupLoginForm() {
         const password = form.querySelector('input[type="password"]').value
         try {
             const token = await login(username, password)
+            // Reset failed attempts counter on successful login
+            failedLoginAttempts = 0;
             // Set cookie with token upon successful login
             setCookie('auth_token', token, 7); // Store for 7 days (adjust as needed)
             const userInfo = await fetchUserInfo(token)
             await profile.loadProfilePage(token, userInfo)
         } catch (error) {
-            displayErrorMessage('Invalid credentials. Please try again.')
+            failedLoginAttempts++;
+            displayErrorMessage(`Invalid credentials. Please try again.`)
             console.error('Login failed:', error)
         }
     });
@@ -91,10 +97,23 @@ export async function fetchUserInfo(token) {
 }
 
 function displayErrorMessage(message) {
-    const errorContainer = document.createElement('div')
-    errorContainer.className = 'error-message'
+    // Remove any existing error messages first
+    const existingError = document.querySelector('.error-message');
+    if (existingError) {
+        existingError.remove();
+    }
+    
+    // Create new error message with animated effect
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'error-message';
     errorContainer.textContent = message;
-    document.querySelector('.auth-container').appendChild(errorContainer)
+    
+    // Add a shake animation for multiple failed attempts
+    if (failedLoginAttempts > 1) {
+        errorContainer.classList.add('shake');
+    }
+    
+    document.querySelector('.auth-container').appendChild(errorContainer);
 }
 
 // Cookie management functions
