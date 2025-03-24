@@ -8,8 +8,6 @@ export function createXPChart(projectData, containerId) {
 		return;
 	}
 
-	console.log("Chart data count:", projectData.length);
-
 	// Sort data by creation date (newest first)
 	const sortedData = [...projectData].sort((a, b) =>
 		new Date(b.createdAt) - new Date(a.createdAt)
@@ -22,7 +20,6 @@ export function createXPChart(projectData, containerId) {
 
 	// Find maximum XP value for scaling
 	const maxXP = Math.max(...sortedData.map(d => d.amount));
-	console.log("Max XP for chart:", maxXP);
 
 	// Calculate bar width based on data length - ensure minimum width for visibility
 	const barWidth = Math.max(4, Math.min(50, (width / sortedData.length) - 2));

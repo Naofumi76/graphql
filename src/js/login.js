@@ -88,11 +88,7 @@ export async function fetchUserInfo(token) {
     }
     const data = await response.json()
     
-    // Entire Data Structure
-    console.log(data)
 
-    // Entire User Array
-    console.log(data.data.user[0])
     return data.data.user[0]
 }
 

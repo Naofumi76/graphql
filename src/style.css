@@ -261,7 +261,6 @@ body.no-scroll {
 	text-align: center;
 	margin-bottom: 15px;
 	color: #ffffff;
-	width: 100%;
 }
 
 /* Module Tabs */
@@ -309,11 +308,65 @@ body.no-scroll {
 	text-align: center;
 }
 
+.xp-level-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 10px auto;
+	max-width: 500px;
+	position: relative;
+}
+
+.xp-info, .level-info {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 0 20px;
+	flex: 1;
+}
+
+
+.xp-level-separator {
+	height: 40px;
+	width: 1px;
+	background-color: #444;
+	margin: 0 10px;
+}
+
 .xp-amount {
 	font-size: 2rem;
 	font-weight: bold;
 	color: #4CAF50;
-	margin: 10px 0;
+	margin: 5px 0;
+}
+
+.level-amount {
+	font-size: 2.2rem;
+	font-weight: bold;
+	color: #ab54f1;
+	margin: 5px 0;
+}
+
+.xp-label, .level-label {
+	font-size: 0.9rem;
+	color: #aaa;
+	margin: 0;
+}
+
+/* Responsive adjustment for XP display */
+@media (max-width: 576px) {
+	.xp-level-separator {
+		display: none;
+	}
+	
+	.xp-level-container {
+		flex-direction: column;
+		gap: 15px;
+	}
+	
+	.xp-info, .level-info {
+		width: 100%;
+	}
 }
 
 /* Audit Page */

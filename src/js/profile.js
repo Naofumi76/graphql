@@ -19,10 +19,8 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 	const moduleType = selectedModule?.event.object.type || 'module';
 
 	const xp = await fetchUserXP(token, selectedModuleId)
+	const userLevel = await graph.userXPLevel(token, selectedModuleId, userInfo.login)
 
-	console.log("XP:", xp)
-	console.log("Modules:", modules)
-	console.log(audits)
 
 	document.body.innerHTML = `
         <div class="welcome-banner">
@@ -48,7 +46,17 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
             
             <div class="xp-display">
                 <h3>XP for ${modules.find(m => m.event.id == selectedModuleId)?.event.object.name || 'Selected Module'}</h3>
-                <p class="xp-amount">${xp.amount !== null ? utils.formatSize(xp.amount) : '0 XP'}</p>
+                <div class="xp-level-container">
+                    <div class="xp-info">
+                        <p class="xp-amount">${xp.amount !== null ? utils.formatSize(xp.amount) : '0 XP'}</p>
+                        <p class="xp-label">Total XP</p>
+                    </div>
+                    <div class="xp-level-separator"></div>
+                    <div class="level-info">
+                        <p class="level-amount">${userLevel}</p>
+                        <p class="level-label">Current Level</p>
+                    </div>
+                </div>
             </div>
                         
             <div class="profile-sections-grid">
@@ -140,8 +148,7 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
     `;
 	// Pass the module type to userXPPerProject
 	var xpProject = await graph.userXPPerProject(token, selectedModuleId, moduleType)
-	console.log("XP PROJECT:", xpProject)
-	console.log("MODULE TYPE:", moduleType)
+
 
 	// Create both charts with the project data
 	chart.createXPChart(xpProject, 'xp-chart-container');
