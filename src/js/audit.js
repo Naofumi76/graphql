@@ -20,7 +20,12 @@ function displayAudits(audits, username, token) {
 
 	document.body.innerHTML = `
 		<div class="profile-container audit-page">
-			<button id="back-to-profile" class="btn-primary">Back to Profile</button>
+			<button id="back-to-profile" class="see-more-btn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+                Back to Profile
+            </button>
             <div class="audit-header-section">
                 <h2>All Audits for ${username}</h2>
                 <h3>Number of audits: ${filteredAudits.length}</h3>
