@@ -85,8 +85,17 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
                 </div>
             </div>
 
+			<div class="chart-tabs">
+				<div class="chart-tab selected" data-chart="bar">XP by Project</div>
+				<div class="chart-tab" data-chart="timeline">XP Timeline</div>
+			</div>
+
 			<div class="chart-container" id="xp-chart-container">
 				<div class="loading-chart">Loading XP chart...</div>
+			</div>
+			
+			<div class="chart-container" id="xp-timeline-container" style="display: none;">
+				<div class="loading-chart">Loading XP timeline...</div>
 			</div>
         </div>
 
@@ -134,8 +143,28 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 	console.log("XP PROJECT:", xpProject)
 	console.log("MODULE TYPE:", moduleType)
 
-	// Create the XP chart with the project data
+	// Create both charts with the project data
 	chart.createXPChart(xpProject, 'xp-chart-container');
+	chart.createXPTimelineChart(xpProject, 'xp-timeline-container');
+
+	// Set up chart tab event listeners
+	document.querySelectorAll('.chart-tab').forEach(tab => {
+		tab.addEventListener('click', () => {
+			// Update selected tab
+			document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('selected'));
+			tab.classList.add('selected');
+			
+			// Show the selected chart and hide the other
+			const chartType = tab.getAttribute('data-chart');
+			if (chartType === 'bar') {
+				document.getElementById('xp-chart-container').style.display = 'flex';
+				document.getElementById('xp-timeline-container').style.display = 'none';
+			} else {
+				document.getElementById('xp-chart-container').style.display = 'none';
+				document.getElementById('xp-timeline-container').style.display = 'flex';
+			}
+		});
+	});
 
 	// Add event listener for "See more" audits button
 	document.getElementById('see-more-audits').addEventListener('click', () => {

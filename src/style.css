@@ -616,6 +616,46 @@ body.no-scroll {
 	cursor: pointer;
 }
 
+/* Chart Tabs */
+.chart-tabs {
+	display: flex;
+	margin-top: 30px;
+	border-radius: 4px 4px 0 0;
+	overflow: hidden;
+}
+
+.chart-tab {
+	padding: 12px 20px;
+	background-color: #333;
+	color: #e0e0e0;
+	cursor: pointer;
+	transition: background-color 0.3s, color 0.3s;
+	border-right: 1px solid #1e1e1e;
+	text-align: center;
+	flex-grow: 1;
+}
+
+.chart-tab:last-child {
+	border-right: none;
+}
+
+.chart-tab:hover {
+	background-color: #444;
+}
+
+.chart-tab.selected {
+	background-color: #252525;
+	color: #ab54f1;
+	border-bottom: 3px solid #ab54f1;
+}
+
+.timeline-info .cumulative-xp {
+	color: #ab54f1;
+	font-weight: bold;
+	font-size: 14px;
+	margin-top: 4px;
+}
+
 /* Responsive Grid */
 @media (max-width: 576px) {
 	.audit-grid {
