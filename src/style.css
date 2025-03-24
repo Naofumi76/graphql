@@ -453,6 +453,10 @@ body.no-scroll {
 	width: 100%;
 	font-weight: bold;
 	transition: background-color 0.3s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
 }
 
 .btn-danger:hover {
