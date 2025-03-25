@@ -21,6 +21,11 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 	const xp = await fetchUserXP(token, selectedModuleId)
 	const userLevel = await graph.userXPLevel(token, selectedModuleId, userInfo.login)
 
+	// Calculate the maximum value for audit ratio bars to set the scale
+	const maxAuditValue = Math.max(userInfo.totalUp, userInfo.totalDown);
+	// Calculate percentage widths (with a minimum of 5% for visibility even when 0)
+	const upPercentage = maxAuditValue > 0 ? (userInfo.totalUp / maxAuditValue) * 100 : 0;
+	const downPercentage = maxAuditValue > 0 ? (userInfo.totalDown / maxAuditValue) * 100 : 0;
 
 	document.body.innerHTML = `
         <div class="welcome-banner">
@@ -62,18 +67,29 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
             <div class="profile-sections-grid">
                 <div class="profile-section audit-ratio">
                     <h3>${userInfo.login}'s audit ratio</h3>
-                    <p class="audit-stat up">
-                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                            <path d="M4,12l1.41,1.41L11,7.83V20h2V7.83l5.58,5.59L20,12l-8-8L4,12z" fill="#4CAF50"/>
-                        </svg>
-                        Done: ${utils.formatSize(userInfo.totalUp)}
-                    </p>
-                    <p class="audit-stat down">
-                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                            <path d="M20,12l-1.41-1.41L13,16.17V4h-2v12.17l-5.58-5.59L4,12l8,8L20,12z" fill="#F44336"/>
-                        </svg>
-                        Received: ${utils.formatSize(userInfo.totalDown)}
-                    </p>
+                    
+                    <!-- Audit ratio SVG visualization -->
+                    <div class="audit-ratio-chart">
+                        <div class="audit-stat up">
+                            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                                <path d="M4,12l1.41,1.41L11,7.83V20h2V7.83l5.58,5.59L20,12l-8-8L4,12z" fill="#4CAF50"/>
+                            </svg>
+                            Done: ${utils.formatSize(userInfo.totalUp)}
+                        </div>
+                        <div class="audit-bar-container">
+                            <div class="audit-bar up" style="width: ${upPercentage}%"></div>
+                        </div>
+                        
+                        <div class="audit-stat down">
+                            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                                <path d="M20,12l-1.41-1.41L13,16.17V4h-2v12.17l-5.58-5.59L4,12l8,8L20,12z" fill="#F44336"/>
+                            </svg>
+                            Received: ${utils.formatSize(userInfo.totalDown)}
+                        </div>
+                        <div class="audit-bar-container">
+                            <div class="audit-bar down" style="width: ${downPercentage}%"></div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="profile-section last-audit">

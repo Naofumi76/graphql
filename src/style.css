@@ -476,10 +476,8 @@ body.no-scroll {
 .audit-stat {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	margin: 10px 0;
+	margin: 5px 0;
 	width: 100%;
-	text-align: center;
 }
 
 .audit-stat.up {
@@ -721,6 +719,38 @@ body.no-scroll {
     transform: translateY(-2px);
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     color: #c069ff;
+}
+
+/* Audit ratio visualization */
+.audit-ratio-chart {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.audit-bar-container {
+    height: 12px;
+    background-color: #333;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.audit-bar {
+    height: 100%;
+    transition: width 1s ease-out;
+    position: relative;
+    border-radius: 6px;
+}
+
+.audit-bar.up {
+    background-color: #4CAF50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
+}
+
+.audit-bar.down {
+    background-color: #F44336;
+    box-shadow: 0 0 6px rgba(218, 205, 204, 0.5);
 }
 
 /* Add these responsive adjustments at the bottom */
