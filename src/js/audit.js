@@ -5,6 +5,7 @@ export async function loadAuditsPage(token, username) {
 	try {
 		const allAudits = await profile.fetchUserAudit(token, username);
 		displayAudits(allAudits, username, token);
+		window.scrollTo(0, 0);
 	} catch (error) {
 		console.error('Failed to load audits:', error);
 	}
@@ -55,6 +56,7 @@ function displayAudits(audits, username, token) {
 			// Fetch user info again to reload the profile page
 			const userInfo = await login.fetchUserInfo(token);
 			await profile.loadProfilePage(token, userInfo);
+			window.scrollTo(0, 0);
 		} catch (error) {
 			// If token is invalid, redirect to login
 			console.error('Failed to go back to profile:', error);
