@@ -767,3 +767,26 @@ body.no-scroll {
 		width: 95%;
 	}
 }
+
+/* Loading spinner and authentication state */
+.loading-auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 15px;
+    border: 4px solid rgba(171, 84, 241, 0.3);
+    border-radius: 50%;
+    border-top: 4px solid #ab54f1;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

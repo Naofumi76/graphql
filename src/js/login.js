@@ -5,22 +5,30 @@ let failedLoginAttempts = 0;
 
 // Check for existing session when page loads
 document.addEventListener('DOMContentLoaded', async () => {
+    const loadingContainer = document.getElementById('loading-container');
+    const loginContainer = document.getElementById('login-container');
+    
+    // Check if token exists in cookies
+    const token = getCookie('auth_token');
+    
+    if (!token) {
+        loadingContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        setupLoginForm();
+        return;
+    }
+    
     try {
-        // Try to auto-login with stored token
-        const token = getCookie('auth_token');
-        if (token) {
-            const userInfo = await fetchUserInfo(token);
-            await profile.loadProfilePage(token, userInfo);
-            return; // Skip login form if session exists
-        }
+        const userInfo = await fetchUserInfo(token);
+        await profile.loadProfilePage(token, userInfo);
     } catch (error) {
         console.error('Auto-login failed:', error);
         // Clear invalid cookie if auto-login fails
         deleteCookie('auth_token');
+        loadingContainer.style.display = 'none';
+        loginContainer.style.display = 'block';
+        setupLoginForm();
     }
-
-    // Only set up the login form if no valid session exists
-    setupLoginForm();
 });
 
 function setupLoginForm() {
@@ -29,6 +37,14 @@ function setupLoginForm() {
         event.preventDefault();
         const username = form.querySelector('input[type="text"]').value
         const password = form.querySelector('input[type="password"]').value
+        
+        // Show loading during login attempt
+        const loginContainer = document.getElementById('login-container');
+        const loadingContainer = document.getElementById('loading-container');
+        loginContainer.style.display = 'none';
+        loadingContainer.style.display = 'flex';
+        loadingContainer.querySelector('h2').textContent = 'Logging in...';
+        
         try {
             const token = await login(username, password)
             // Reset failed attempts counter on successful login
@@ -39,6 +55,9 @@ function setupLoginForm() {
             await profile.loadProfilePage(token, userInfo)
         } catch (error) {
             failedLoginAttempts++;
+            loginContainer.style.display = 'block';
+            loadingContainer.style.display = 'none';
+            
             displayErrorMessage(`Invalid credentials. Please try again.`)
             console.error('Login failed:', error)
         }
@@ -109,7 +128,7 @@ function displayErrorMessage(message) {
         errorContainer.classList.add('shake');
     }
     
-    document.querySelector('.auth-container').appendChild(errorContainer);
+    document.getElementById('login-container').appendChild(errorContainer);
 }
 
 // Cookie management functions

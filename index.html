@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authentication Page</title>
+    <title>Z01-GraphQL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="auth-container">
+    <div id="loading-container" class="auth-container loading-auth">
+        <div class="loading-spinner"></div>
+        <h2>Checking session...</h2>
+    </div>
+    
+    <div id="login-container" class="auth-container" style="display: none;">
         <h2>Login</h2>
         <form>
             <input type="text" placeholder="Username or Email" required>
