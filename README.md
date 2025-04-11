@@ -2,6 +2,8 @@
 
 A modern, interactive dashboard for visualizing student progress using the Zone01 GraphQL API. This application offers authentication, profile management, XP tracking, and audit information visualization in an intuitive interface.  
 
+# ❗ Check the website here! [GraphQL-Zone01](https://naofumi76.github.io/graphql/)
+
 ## 📌 Features  
 
 ### 🔐 **Authentication & Profile Management**  
@@ -58,9 +60,13 @@ You can access the original website at this link :
 
 ## 📖 How to Use
 
-### Login
+### Login with a Zone01 account 
 1. Enter your Zone01 username/email and your password
 2. The system will authenticate you and load your personal dashboard
+
+### Login without account
+1. You can access the "demo mode" to still see the dashboard without an account
+2. The data visible are just exemple of how the dashboard could be. 
 
 ### Dashboard Navigation
 - **Module Selection**: Switch between different modules using the top tabs

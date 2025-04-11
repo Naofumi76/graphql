@@ -1,4 +1,10 @@
+import * as demo from './demo.js';
+
 export async function userXPPerProject(token, EVENT_ID, moduleType) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.getDemoXPProject();
+    }
+    
 	const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
 		method: 'POST',
 		headers: {
@@ -49,6 +55,10 @@ export async function userXPPerProject(token, EVENT_ID, moduleType) {
 }
 
 export async function userXPLevel(token, EVENT_ID, userLogin) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.getDemoXPLevel(EVENT_ID);
+    }
+    
 	const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
 		method: 'POST',
 		headers: {

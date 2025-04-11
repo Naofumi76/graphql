@@ -1,4 +1,5 @@
 import * as profile from './profile.js'
+import * as demo from './demo.js'
 
 // Track failed login attempts
 let failedLoginAttempts = 0;
@@ -8,10 +9,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingContainer = document.getElementById('loading-container');
     const loginContainer = document.getElementById('login-container');
     
+    // Check for demo mode cookie
+    if (demo.isInDemoMode()) {
+        const demoUserInfo = demo.createDemoUserInfo();
+        window.scrollTo(0, 0);
+        document.documentElement.style.overflowY = 'auto';
+        await profile.loadProfilePage('demo_token', demoUserInfo);
+        demo.addDemoBanner();
+        return;
+    }
+    
     // Check if token exists in cookies
     const token = getCookie('auth_token');
     
     if (!token) {
+        document.documentElement.style.overflowY = 'hidden';
         loadingContainer.style.display = 'none';
         loginContainer.style.display = 'block';
         setupLoginForm();
@@ -50,9 +62,11 @@ function setupLoginForm() {
             // Reset failed attempts counter on successful login
             failedLoginAttempts = 0;
             // Set cookie with token upon successful login
-            setCookie('auth_token', token, 7); // Store for 7 days (adjust as needed)
+            setCookie('auth_token', token, 7); // Store for 7 days
             const userInfo = await fetchUserInfo(token)
             await profile.loadProfilePage(token, userInfo)
+            window.scrollTo(0, 0);
+            document.documentElement.style.overflowY = 'auto';
         } catch (error) {
             failedLoginAttempts++;
             loginContainer.style.display = 'block';
@@ -62,6 +76,31 @@ function setupLoginForm() {
             console.error('Login failed:', error)
         }
     });
+    
+    // Listener for demo mode button
+    const demoButton = document.getElementById('demo-mode-button');
+    if (demoButton) {
+        demoButton.addEventListener('click', async () => {
+            // Loading animation
+            const loginContainer = document.getElementById('login-container');
+            const loadingContainer = document.getElementById('loading-container');
+            loginContainer.style.display = 'none';
+            loadingContainer.style.display = 'flex';
+            loadingContainer.querySelector('h2').textContent = 'Loading demo environment...';
+            
+            // Set demo mode
+            demo.setDemoMode(true);
+            const demoUserInfo = demo.createDemoUserInfo();
+            
+            // Load profile page with demo data
+            setTimeout(async () => {
+                await profile.loadProfilePage('demo_token', demoUserInfo);
+                window.scrollTo(0, 0);
+                document.documentElement.style.overflowY = 'auto';
+                demo.addDemoBanner();
+            }, 1500); // Small delay to show the loading animation
+        });
+    }
 }
 
 async function login(username, password) {
@@ -82,6 +121,10 @@ async function login(username, password) {
 }
 
 export async function fetchUserInfo(token) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.createDemoUserInfo();
+    }
+    
     const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
         method: 'POST',
         headers: {
@@ -107,7 +150,6 @@ export async function fetchUserInfo(token) {
     }
     const data = await response.json()
     
-
     return data.data.user[0]
 }
 
@@ -155,5 +197,6 @@ export function deleteCookie(name) {
 
 export function logout() {
     deleteCookie('auth_token');
+    deleteCookie('demo_mode');
     window.location.reload();
 }

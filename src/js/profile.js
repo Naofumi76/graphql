@@ -3,6 +3,7 @@ import * as audit from './audit.js'
 import * as login from './login.js'
 import * as graph from './graph.js'
 import * as chart from './chart.js'
+import * as demo from './demo.js'
 
 export async function loadProfilePage(token, userInfo, selectedModuleId = null) {
 	const audits = await fetchUserAudit(token, userInfo.login, true)
@@ -253,6 +254,9 @@ export async function loadProfilePage(token, userInfo, selectedModuleId = null) 
 }
 
 export async function fetchUserAudit(token, userName, onlyLast = false) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.getDemoAuditData(onlyLast);
+    }
 	const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
 		method: 'POST',
 		headers: {
@@ -300,6 +304,9 @@ export async function fetchUserAudit(token, userName, onlyLast = false) {
 }
 
 export async function fetchUserXP(token, id = 0) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.getDemoXPData(id);
+    }
 	const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
 		method: 'POST',
 		headers: {
@@ -332,6 +339,9 @@ export async function fetchUserXP(token, id = 0) {
 }
 
 export async function fetchUserModule(token) {
+    if (demo.isInDemoMode() || token === 'demo_token') {
+        return demo.getDemoModuleData();
+    }
 	const response = await fetch('https://zone01normandie.org/api/graphql-engine/v1/graphql', {
 		method: 'POST',
 		headers: {
